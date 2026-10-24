@@ -1,5 +1,15 @@
 # claw-machine 💛
 
+**Live demo: [claw-machine-nu.vercel.app](https://claw-machine-nu.vercel.app)** (edit PIN
+`1234`; your edits stay in your own browser)
+
+<p align="center">
+  <a href="https://claw-machine-nu.vercel.app">
+    <img src="docs/demo-desktop.png" width="68%" alt="The claw machine on desktop: an olive-green cabinet full of capsule prizes, with an arrow pad and a Drop button below">
+  </a>
+  <img src="docs/demo-mobile.png" width="26%" alt="The same machine on a phone, with a thumb stick and a Drop button">
+</p>
+
 A cozy 3D claw machine made as a gift. She steers the claw, drops it, and the prize
 decides **where you eat tonight** or reveals **a gift you picked for her**. There are no
 credits, no costs and no losing: the claw always comes through.
@@ -38,13 +48,22 @@ the big **Drop!** button. The ring under the claw turns **gold** when a prize is
 
 ## Deploy to Vercel
 
-1. Push this folder to its own GitHub repository.
-2. In Vercel, choose **Add New → Project**, import the repo, and keep the detected Next.js
-   settings. No environment variables are needed.
-3. Every push to `main` redeploys. Send her the URL; on iPhone, _Share → Add to Home Screen_
-   makes it feel like an app.
+The demo runs on Vercel at **https://claw-machine-nu.vercel.app**. The whole app is a static
+build, so no environment variables are needed.
 
-Or from the terminal: `npx vercel` (preview) and `npx vercel --prod`.
+From the terminal, with the Vercel CLI logged in:
+
+```bash
+vercel deploy --prod   # build on Vercel and update the production URL
+vercel deploy          # preview deployment
+```
+
+Or connect a Git repo: push this folder to GitHub, choose **Add New → Project** in Vercel,
+import it and keep the detected Next.js settings. Every push to `main` then redeploys.
+
+Send her the production URL; on iPhone, _Share → Add to Home Screen_ makes it feel like an
+app. Per-deployment URLs (`claw-machine-<hash>-….vercel.app`) sit behind Vercel's deployment
+protection, so always share the production one.
 
 ## Make it yours: editing prizes
 
@@ -77,6 +96,12 @@ Alternatively, use **Import JSON** on her phone directly.
 Photos are shrunk to 640px JPEGs before saving. localStorage holds about 5 MB, so a handful of
 photos is fine; if storage fills up, the editor shows a warning. Image links (`https://…`) take
 no storage at all.
+
+**Everything you ship is public.** The app has no server, so `default-config.json` (every note,
+redeem note, the final message, any embedded photos and the PIN) is bundled into the
+JavaScript that every visitor downloads. The one-gift-a-day lock also runs only in the browser.
+Anyone with the link can read every gift early in DevTools, so keep anything truly private out
+of the shipped config.
 
 ## How "she always wins" works
 

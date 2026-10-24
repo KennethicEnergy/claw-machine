@@ -10,6 +10,8 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Pick one, love",
   description: "A cozy little claw machine for picking dinner and finding gifts.",
+  // A personal gift: the link is for her, not for search engines.
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

@@ -101,7 +101,9 @@ no storage at all.
 redeem note, the final message, any embedded photos and the PIN) is bundled into the
 JavaScript that every visitor downloads. The one-gift-a-day lock also runs only in the browser.
 Anyone with the link can read every gift early in DevTools, so keep anything truly private out
-of the shipped config.
+of the shipped config. The page asks search engines not to index it (`robots` in
+`src/app/layout.tsx`), but that only keeps it out of search results; the link itself still
+works for anyone who has it.
 
 ## How "she always wins" works
 

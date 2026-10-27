@@ -1,9 +1,13 @@
 {
-  "revision": 2,
+  "revision": 3,
   "title": "Pick one, love",
   "subtitle": "Steer, drop, and let the little claw decide.",
   "editPin": "1234",
-  "cabinet": { "width": 6, "depth": 4.5, "height": 6.5 },
+  "cabinet": {
+    "width": 6,
+    "depth": 4.5,
+    "height": 6.5
+  },
   "clawStrength": 0.5,
   "clawSpeed": 2.4,
   "pityThreshold": 3,
@@ -200,21 +204,6 @@
       "finalMessage": "You found every single one. None of them come close to you, though. I love you.",
       "prizes": [
         {
-          "id": "breakfast",
-          "name": "Breakfast in bed",
-          "shape": "gift",
-          "size": 0.8,
-          "color": "#F4F1E1",
-          "secondaryColor": "#C9A24B",
-          "weight": 1,
-          "slipperiness": 0.25,
-          "label": "Breakfast",
-          "revealTitle": "Breakfast in bed",
-          "revealMessage": "Pancakes, fruit and coffee exactly how you like it. You don't have to get up.",
-          "redeemNote": "Valid for one lazy Sunday morning",
-          "spawnCount": 2
-        },
-        {
           "id": "getaway",
           "name": "Weekend getaway",
           "shape": "gift",
@@ -245,21 +234,6 @@
           "spawnCount": 2
         },
         {
-          "id": "letter",
-          "name": "A handwritten letter",
-          "shape": "box",
-          "size": 0.65,
-          "color": "#E4E9C8",
-          "secondaryColor": "#6B7A2E",
-          "weight": 0.6,
-          "slipperiness": 0.2,
-          "label": "Letter",
-          "revealTitle": "A letter, just for you",
-          "revealMessage": "I wrote down all the little things I love about you. It's waiting in my drawer.",
-          "redeemNote": "Ask for it any time",
-          "spawnCount": 2
-        },
-        {
           "id": "massage",
           "name": "Massage coupon",
           "shape": "plush",
@@ -287,6 +261,51 @@
           "revealTitle": "A mystery gift",
           "revealMessage": "I'm not telling. You'll have to come find me.",
           "redeemNote": "Redeem in person, with a hug",
+          "spawnCount": 2
+        },
+        {
+          "id": "kisses-1",
+          "name": "Kisses",
+          "shape": "plush",
+          "size": 0.75,
+          "color": "#D9A48C",
+          "secondaryColor": "#F4F1E1",
+          "weight": 0.8,
+          "slipperiness": 0.2,
+          "label": "Kisses",
+          "revealTitle": "Kisses 💋",
+          "revealMessage": "One kiss, any time you want it. Just ask.",
+          "redeemNote": "Redeem any time, as many as you want",
+          "spawnCount": 2
+        },
+        {
+          "id": "kisses-2",
+          "name": "More kisses",
+          "shape": "plush",
+          "size": 0.75,
+          "color": "#C8553D",
+          "secondaryColor": "#F4F1E1",
+          "weight": 0.8,
+          "slipperiness": 0.2,
+          "label": "More kisses",
+          "revealTitle": "More kisses 💋",
+          "revealMessage": "You already had kisses? Have some more. I'll never run out.",
+          "redeemNote": "No limit, no expiry date",
+          "spawnCount": 2
+        },
+        {
+          "id": "kisses-3",
+          "name": "Even more kisses",
+          "shape": "plush",
+          "size": 0.75,
+          "color": "#B9785F",
+          "secondaryColor": "#F4F1E1",
+          "weight": 0.8,
+          "slipperiness": 0.2,
+          "label": "Even more kiss",
+          "revealTitle": "Even more kisses 💋",
+          "revealMessage": "Still more kisses. Forehead, cheek, nose, all of them.",
+          "redeemNote": "Redeem right now, in person",
           "spawnCount": 2
         }
       ]

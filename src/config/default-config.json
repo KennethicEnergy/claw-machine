@@ -1,5 +1,5 @@
 {
-  "revision": 3,
+  "revision": 4,
   "title": "Pick one, love",
   "subtitle": "Steer, drop, and let the little claw decide.",
   "editPin": "1234",
@@ -196,6 +196,76 @@
           "label": "Adobo",
           "revealTitle": "Chimken Adobo",
           "revealMessage": "Soy, vinegar, garlic and bay leaf, simmered till tender. Extra sauce for your rice.",
+          "spawnCount": 2
+        },
+        {
+          "id": "pinakbet",
+          "name": "Pinakbet",
+          "shape": "cylinder",
+          "size": 0.7,
+          "color": "#6B7A2E",
+          "secondaryColor": "#C8553D",
+          "weight": 0.9,
+          "slipperiness": 0.3,
+          "label": "Pinakbet",
+          "revealTitle": "Pinakbet",
+          "revealMessage": "Squash, okra, eggplant, ampalaya and sitaw with bagoong. Lots of rice, please.",
+          "spawnCount": 2
+        },
+        {
+          "id": "ginataang-kalabasa",
+          "name": "Ginataang Kalabasa at Sitaw",
+          "shape": "capsule-ball",
+          "size": 0.7,
+          "color": "#E9A23B",
+          "secondaryColor": "#A3B15A",
+          "weight": 0.9,
+          "slipperiness": 0.3,
+          "label": "Ginataang",
+          "revealTitle": "Ginataang Kalabasa at Sitaw",
+          "revealMessage": "Squash and string beans in creamy coconut milk. Warm, sweet and cozy.",
+          "spawnCount": 2
+        },
+        {
+          "id": "laing",
+          "name": "Laing",
+          "shape": "sphere",
+          "size": 0.7,
+          "color": "#4B5A22",
+          "secondaryColor": "#F4F1E1",
+          "weight": 0.9,
+          "slipperiness": 0.3,
+          "label": "Laing",
+          "revealTitle": "Laing",
+          "revealMessage": "Taro leaves slow-cooked in coconut milk with a little chili kick.",
+          "spawnCount": 2
+        },
+        {
+          "id": "ginisang-ampalaya",
+          "name": "Ginisang Ampalaya",
+          "shape": "capsule",
+          "size": 0.7,
+          "color": "#808F3C",
+          "secondaryColor": "#E9C46A",
+          "weight": 0.9,
+          "slipperiness": 0.3,
+          "label": "Ampalaya",
+          "revealTitle": "Ginisang Ampalaya",
+          "revealMessage": "Bitter gourd sautéed with egg and tomato. I'll make it not too bitter for you.",
+          "spawnCount": 2
+        },
+        {
+          "id": "tortang-talong",
+          "name": "Tortang Talong",
+          "shape": "box",
+          "size": 0.7,
+          "color": "#5E3A5A",
+          "secondaryColor": "#E9C46A",
+          "weight": 0.9,
+          "slipperiness": 0.3,
+          "label": "Tortang Talong",
+          "revealTitle": "Tortang Talong",
+          "revealMessage": "Grilled eggplant, flattened and fried in egg. Ketchup on the side.",
           "spawnCount": 2
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "revision": 7,
+  "revision": 8,
   "title": "Pick one, love",
   "subtitle": "Steer, drop, and let the little claw decide.",
   "editPin": "1234",
@@ -12,6 +12,9 @@
   "clawSpeed": 2.4,
   "pityThreshold": 3,
   "giftsPerDay": 1,
+  "extraGifts": {
+    "2026-10-29": 1
+  },
   "gravity": 12,
   "seed": 214,
   "theme": {

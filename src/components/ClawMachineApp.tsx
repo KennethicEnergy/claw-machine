@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import type { ClawInput } from "@/game/types";
 import { useDailyRhythm } from "@/hooks/useDailyRhythm";
 import { useKeyboardControls } from "@/hooks/useKeyboardControls";
+import { useProgressSync } from "@/hooks/useProgressSync";
 import { useThemeVars } from "@/hooks/useThemeVars";
 import { useGameStore } from "@/stores/useGameStore";
 import { useMachineStore } from "@/stores/useMachineStore";
@@ -44,6 +45,7 @@ const ClawMachineApp = () => {
 
   useThemeVars(theme);
   useDailyRhythm();
+  useProgressSync();
   useKeyboardControls({ input, onDrop: handleDrop, onEditShortcut: openPin });
 
   return (

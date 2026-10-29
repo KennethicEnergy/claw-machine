@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { PersistStorage } from "zustand/middleware";
 import { GOOD_GRAB_LINES, SO_CLOSE_LINES } from "@/config/copy";
 import { canDrop, clawTransition, INITIAL_CLAW_STATE } from "@/game/clawMachine";
 import { dayKey, isStaleDecision } from "@/game/daily";
 import { resolveAttempt } from "@/game/grip";
+import { mergeProgress } from "@/game/progress";
 import type { AttemptResult, GripMachine, GripTarget } from "@/game/grip";
 import type { ClawEvent, GameState, ModeId } from "@/game/types";
 import { pickLine } from "@/lib/pickLine";
@@ -51,6 +53,8 @@ type GameActions = {
   playAgain: () => void;
   respawnAll: () => void;
   resetProgress: () => void;
+  /** Picks up gifts won in another copy of the app (another tab, the home-screen icon). */
+  syncProgress: () => void;
   setMode: (mode: ModeId) => void;
   showToast: (text: string) => void;
   dismissToast: (id: number) => void;
@@ -72,6 +76,42 @@ export const isPlayBlocked = ({
   decision,
 }: Pick<GameState, "reveal" | "celebrating" | "resting" | "mode" | "decision">) =>
   reveal !== null || celebrating || resting || (mode === "decide" && decision !== null);
+
+type SavedProgress = Pick<
+  GameState,
+  | "mode"
+  | "pity"
+  | "attempts"
+  | "decision"
+  | "decisionDay"
+  | "collected"
+  | "collectedDays"
+>;
+
+const jsonStorage = createJSONStorage<SavedProgress>(() =>
+  createSafeStorage(
+    () => localStorage,
+    (error) => console.warn("Could not save progress", error),
+  ),
+);
+
+const readSavedProgress = () => {
+  const saved = jsonStorage?.getItem(PROGRESS_STORAGE_KEY);
+  return saved instanceof Promise ? undefined : saved?.state;
+};
+
+/**
+ * Saves progress without dropping gifts that are already saved: another copy
+ * of the app may have won them since this one loaded.
+ */
+const progressStorage: PersistStorage<SavedProgress> | undefined = jsonStorage && {
+  ...jsonStorage,
+  setItem: (name, value) =>
+    jsonStorage.setItem(name, {
+      ...value,
+      state: { ...value.state, ...mergeProgress(value.state, readSavedProgress()) },
+    }),
+};
 
 /** Fresh round: every prize respawns and the claw goes home. */
 const respawned = ({ spawnEpoch }: GameState) => ({
@@ -175,7 +215,9 @@ export const useGameStore = create<GameStore>()(
             reveal: null,
           })),
         respawnAll: () => set(respawned),
-        resetProgress: () =>
+        resetProgress: () => {
+          // Clear the saved copy first, or the merge on save would bring it back.
+          useGameStore.persist.clearStorage();
           set((state) => ({
             ...respawned(state),
             collected: [],
@@ -185,7 +227,9 @@ export const useGameStore = create<GameStore>()(
             pity: 0,
             reveal: null,
             celebrating: false,
-          })),
+          }));
+        },
+        syncProgress: () => set((state) => mergeProgress(state, readSavedProgress())),
 
         setMode: (mode) =>
           set({
@@ -209,12 +253,7 @@ export const useGameStore = create<GameStore>()(
     {
       name: PROGRESS_STORAGE_KEY,
       version: 1,
-      storage: createJSONStorage(() =>
-        createSafeStorage(
-          () => localStorage,
-          (error) => console.warn("Could not save progress", error),
-        ),
-      ),
+      storage: progressStorage,
       partialize: ({
         mode,
         pity,

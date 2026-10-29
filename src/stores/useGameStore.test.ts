@@ -6,6 +6,8 @@ import { INITIAL_GAME_STATE, PROGRESS_STORAGE_KEY, useGameStore } from "./useGam
 const machine = { clawStrength: 0, pityThreshold: 3, seed: 2024 };
 const heavy = { key: "ramen~x~0~0", weight: 5, slipperiness: 1 };
 const game = () => useGameStore.getState();
+const savedState = () =>
+  JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY) ?? "{}").state;
 const gripping = () =>
   useGameStore.setState({ claw: { phase: "gripping", grabbedKey: null, holds: false } });
 
@@ -137,6 +139,13 @@ describe("rounds and progress", () => {
     });
   });
 
+  it("reset progress also clears the saved copy", () => {
+    useGameStore.setState({ collected: ["a"], collectedDays: { a: "2026-02-13" } });
+    game().resetProgress();
+    game().showToast("still empty after the next save");
+    expect(savedState().collected).toEqual([]);
+  });
+
   it("switching modes resets the claw and closes any reveal", () => {
     useGameStore.setState({
       claw: { phase: "returning", grabbedKey: "k", holds: true },
@@ -201,5 +210,41 @@ describe("every day", () => {
     expect(game().drop()).toBe(false);
     game().setResting(false);
     expect(game().drop()).toBe(true);
+  });
+});
+
+describe("progress saved by another copy of the app", () => {
+  // Another tab, or the home-screen icon, won a gift and saved it.
+  const winElsewhere = (id: string, day: string) => {
+    const saved = JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY) ?? "{}");
+    saved.state.collected = [...saved.state.collected, id];
+    saved.state.collectedDays = { ...saved.state.collectedDays, [id]: day };
+    localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(saved));
+  };
+
+  it("is not erased when this copy saves its older list", () => {
+    winElsewhere("kisses-2", "2026-10-29");
+    game().setMode("collect");
+    expect(savedState()).toMatchObject({
+      collected: ["kisses-2"],
+      collectedDays: { "kisses-2": "2026-10-29" },
+    });
+  });
+
+  it("keeps both copies' gifts", () => {
+    useGameStore.setState({ mode: "collect" });
+    winElsewhere("kisses-2", "2026-10-28");
+    game().winPrize({ key: "getaway~0", prizeId: "getaway" }, "2026-10-29");
+    expect(savedState().collected).toEqual(["getaway", "kisses-2"]);
+  });
+
+  it("shows up in this copy after a sync", () => {
+    useGameStore.setState({ mode: "collect" });
+    winElsewhere("kisses-2", "2026-10-29");
+    game().syncProgress();
+    expect(game()).toMatchObject({
+      collected: ["kisses-2"],
+      collectedDays: { "kisses-2": "2026-10-29" },
+    });
   });
 });

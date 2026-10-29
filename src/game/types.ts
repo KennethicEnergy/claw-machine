@@ -80,6 +80,8 @@ export type MachineConfig = {
   pityThreshold: number;
   /** Gifts she can collect per day (0 = no limit). */
   giftsPerDay: number;
+  /** Extra gifts on particular days, by day key, e.g. { "2026-10-29": 1 }. */
+  extraGifts?: Record<string, number>;
   gravity: number;
   seed: number;
   theme: ThemePalette;

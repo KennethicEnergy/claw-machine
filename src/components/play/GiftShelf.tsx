@@ -1,7 +1,7 @@
 "use client";
 
 import { DAILY_COPY } from "@/config/copy";
-import { dailyGiftStatus } from "@/game/daily";
+import { dailyGiftStatus, giftsAllowedOn } from "@/game/daily";
 import { collectProgress } from "@/game/progress";
 import { useToday } from "@/hooks/useToday";
 import { useGameStore } from "@/stores/useGameStore";
@@ -13,18 +13,20 @@ import { NextGiftCountdown } from "./NextGiftCountdown";
 export const GiftShelf = () => {
   const prizes = useMachineStore((state) => state.config.modes.collect.prizes);
   const giftsPerDay = useMachineStore((state) => state.config.giftsPerDay);
+  const extraGifts = useMachineStore((state) => state.config.extraGifts);
   const collected = useGameStore((state) => state.collected);
   const collectedDays = useGameStore((state) => state.collectedDays);
   const openReveal = useGameStore((state) => state.openReveal);
   const setCelebrating = useGameStore((state) => state.setCelebrating);
   const today = useToday();
   const { count, total, done } = collectProgress(collected, prizes);
+  const allowedToday = giftsAllowedOn({ giftsPerDay, extraGifts }, today);
   const { claimedToday, resting } = dailyGiftStatus({
     collectedDays,
-    giftsPerDay,
+    giftsPerDay: allowedToday,
     today,
   });
-  const waitingToday = Math.min(giftsPerDay - claimedToday, total - count);
+  const waitingToday = Math.min(allowedToday - claimedToday, total - count);
   const percent = total === 0 ? 0 : Math.round((count / total) * 100);
 
   return (

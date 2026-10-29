@@ -12,6 +12,15 @@ export const msUntilNextDay = (date: Date) =>
 export const claimsOn = (collectedDays: Readonly<Record<string, string>>, day: string) =>
   Object.values(collectedDays).filter((collectedOn) => collectedOn === day).length;
 
+/** Gifts she can collect on `day`: the daily limit plus any extra for that day. */
+export const giftsAllowedOn = (
+  {
+    giftsPerDay,
+    extraGifts,
+  }: { giftsPerDay: number; extraGifts?: Readonly<Record<string, number>> },
+  day: string,
+) => (giftsPerDay > 0 ? giftsPerDay + (extraGifts?.[day] ?? 0) : 0);
+
 type DailyGiftInput = {
   collectedDays: Readonly<Record<string, string>>;
   /** 0 means no daily limit. */

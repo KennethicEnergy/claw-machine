@@ -3,6 +3,7 @@ import {
   claimsOn,
   dailyGiftStatus,
   dayKey,
+  giftsAllowedOn,
   isStaleDecision,
   msUntilNextDay,
 } from "./daily";
@@ -71,5 +72,22 @@ describe("isStaleDecision", () => {
 
   it("has nothing to expire without a pick", () => {
     expect(isStaleDecision(null, null, "2026-02-14")).toBe(false);
+  });
+});
+
+describe("giftsAllowedOn", () => {
+  const extraGifts = { "2026-10-29": 1 };
+
+  it("adds the extra gifts on their day", () => {
+    expect(giftsAllowedOn({ giftsPerDay: 1, extraGifts }, "2026-10-29")).toBe(2);
+  });
+
+  it("is the daily limit on other days", () => {
+    expect(giftsAllowedOn({ giftsPerDay: 1, extraGifts }, "2026-10-30")).toBe(1);
+    expect(giftsAllowedOn({ giftsPerDay: 1 }, "2026-10-29")).toBe(1);
+  });
+
+  it("stays unlimited without a daily limit", () => {
+    expect(giftsAllowedOn({ giftsPerDay: 0, extraGifts }, "2026-10-29")).toBe(0);
   });
 });

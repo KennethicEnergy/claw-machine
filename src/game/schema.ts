@@ -100,6 +100,14 @@ export const machineConfigSchema = z.object({
   pityThreshold: wholeNumber("Pity threshold", 0, 10),
   // Older saved configs predate the daily limit: give them one gift a day.
   giftsPerDay: wholeNumber("Gifts per day", 0, 20).default(1),
+  extraGifts: z
+    .record(
+      z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, "Extra gift days must look like 2026-10-29"),
+      wholeNumber("Extra gifts", 0, 20),
+    )
+    .optional(),
   gravity: ranged("Gravity", 1, 30),
   seed: wholeNumber("Seed", 0, 4_294_967_295),
   theme: themeSchema,

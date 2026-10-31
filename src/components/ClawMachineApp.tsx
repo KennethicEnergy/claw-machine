@@ -3,7 +3,9 @@
 import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import type { ClawInput } from "@/game/types";
+import type { Point } from "@/lib/shatter";
 import { useDailyRhythm } from "@/hooks/useDailyRhythm";
+import { useDoubleTap } from "@/hooks/useDoubleTap";
 import { useKeyboardControls } from "@/hooks/useKeyboardControls";
 import { useProgressSync } from "@/hooks/useProgressSync";
 import { useThemeVars } from "@/hooks/useThemeVars";
@@ -14,6 +16,7 @@ import { Celebration } from "./play/Celebration";
 import { Controls } from "./play/Controls";
 import { DecisionBanner } from "./play/DecisionBanner";
 import { GiftShelf } from "./play/GiftShelf";
+import { GlassShatter } from "./play/GlassShatter";
 import { Header } from "./play/Header";
 import { LoadingScreen } from "./play/LoadingScreen";
 import { ModeTabs } from "./play/ModeTabs";
@@ -34,14 +37,29 @@ const ClawMachineApp = () => {
   // Steering vector shared by keyboard, joystick and the claw's frame loop.
   const [input] = useState<ClawInput>(() => ({ x: 0, z: 0 }));
   const [pinOpen, setPinOpen] = useState(false);
+  const [impact, setImpact] = useState<Point | null>(null);
   const theme = useMachineStore((state) => state.config.theme);
   const mode = useGameStore((state) => state.mode);
   const editMode = useGameStore((state) => state.editMode);
   const drop = useGameStore((state) => state.drop);
+  const shatterGlass = useGameStore((state) => state.shatterGlass);
   const openPin = useCallback(() => setPinOpen(true), []);
   const handleDrop = useCallback(() => {
     drop();
   }, [drop]);
+
+  // Easter egg: a double tap on the machine in gift mode breaks the glass.
+  const handleDoubleTap = useCallback(
+    (point: Point) => {
+      const { mode: current, editMode: editing, shattered } = useGameStore.getState();
+      if (current !== "collect" || editing || shattered) return;
+      const gifts = useMachineStore.getState().config.modes.collect.prizes;
+      shatterGlass(gifts.map(({ id }) => id));
+      setImpact(point);
+    },
+    [shatterGlass],
+  );
+  const handleTap = useDoubleTap(handleDoubleTap);
 
   useThemeVars(theme);
   useDailyRhythm();
@@ -54,8 +72,9 @@ const ClawMachineApp = () => {
     >
       <Header />
       <ModeTabs />
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1" onPointerUp={handleTap}>
         <MachineCanvas input={input} />
+        {impact && <GlassShatter impact={impact} />}
         <Toast />
         <DecisionBanner />
       </div>

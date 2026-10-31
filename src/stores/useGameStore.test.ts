@@ -248,3 +248,28 @@ describe("progress saved by another copy of the app", () => {
     });
   });
 });
+
+describe("shatterGlass", () => {
+  it("hands her every gift, keeping the days of gifts already won", () => {
+    useGameStore.setState({
+      collected: ["getaway"],
+      collectedDays: { getaway: "2026-10-28" },
+    });
+    game().shatterGlass(["getaway", "movie", "kisses-1"], "2026-10-31");
+    expect(game()).toMatchObject({
+      shattered: true,
+      collected: ["getaway", "movie", "kisses-1"],
+      collectedDays: {
+        getaway: "2026-10-28",
+        movie: "2026-10-31",
+        "kisses-1": "2026-10-31",
+      },
+    });
+  });
+
+  it("saves the gifts so they survive a reload", () => {
+    game().shatterGlass(["getaway", "movie"], "2026-10-31");
+    expect(savedState().collected).toEqual(["getaway", "movie"]);
+    expect(savedState()).not.toHaveProperty("shattered");
+  });
+});

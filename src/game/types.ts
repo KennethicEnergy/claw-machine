@@ -153,6 +153,8 @@ export type GameState = {
   resting: boolean;
   reveal: Reveal | null;
   celebrating: boolean;
+  /** The easter egg broke the front glass (until the page reloads). */
+  shattered: boolean;
   toast: { id: number; text: string } | null;
   editMode: boolean;
   selectedPrizeId: string | null;

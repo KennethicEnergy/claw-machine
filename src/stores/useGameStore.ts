@@ -28,6 +28,7 @@ export const INITIAL_GAME_STATE: GameState = {
   resting: false,
   reveal: null,
   celebrating: false,
+  shattered: false,
   toast: null,
   editMode: false,
   selectedPrizeId: null,
@@ -53,6 +54,8 @@ type GameActions = {
   playAgain: () => void;
   respawnAll: () => void;
   resetProgress: () => void;
+  /** Easter egg: breaks the glass and hands her every gift at once. */
+  shatterGlass: (giftIds: readonly string[], day?: string) => void;
   /** Picks up gifts won in another copy of the app (another tab, the home-screen icon). */
   syncProgress: () => void;
   setMode: (mode: ModeId) => void;
@@ -229,6 +232,16 @@ export const useGameStore = create<GameStore>()(
             celebrating: false,
           }));
         },
+        shatterGlass: (giftIds, day = dayKey(new Date())) =>
+          set(({ collected, collectedDays }) => ({
+            shattered: true,
+            reveal: null,
+            collected: [...new Set([...collected, ...giftIds])],
+            collectedDays: {
+              ...Object.fromEntries(giftIds.map((id) => [id, day])),
+              ...collectedDays,
+            },
+          })),
         syncProgress: () => set((state) => mergeProgress(state, readSavedProgress())),
 
         setMode: (mode) =>

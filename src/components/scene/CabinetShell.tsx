@@ -15,6 +15,7 @@ import { cabinetBoxes } from "@/game/cabinetGeometry";
 import type { CabinetLayout } from "@/game/layout";
 import type { ThemePalette } from "@/game/types";
 import { useDispose } from "@/hooks/useDispose";
+import { useGameStore } from "@/stores/useGameStore";
 import { createDotsTexture, createSignTexture } from "@/lib/canvasTextures";
 import { mixHex } from "@/lib/color";
 
@@ -83,6 +84,7 @@ type CabinetShellProps = {
 
 export const CabinetShell = ({ layout, theme, title, pulse }: CabinetShellProps) => {
   const { halfWidth, halfDepth, height, chute } = layout;
+  const shattered = useGameStore((state) => state.shattered);
   const width = halfWidth * 2;
   const depth = halfDepth * 2;
   const outerWidth = width + CABINET_TRIM * 2;
@@ -191,8 +193,10 @@ export const CabinetShell = ({ layout, theme, title, pulse }: CabinetShellProps)
         <meshStandardMaterial map={dotsTexture} roughness={0.9} />
       </mesh>
 
-      {/* Glass */}
-      <Glass size={[width, height]} position={[0, height / 2, halfDepth]} />
+      {/* Glass; the front pane is gone once the easter egg breaks it */}
+      {!shattered && (
+        <Glass size={[width, height]} position={[0, height / 2, halfDepth]} />
+      )}
       <Glass
         size={[depth, height]}
         position={[-halfWidth, height / 2, 0]}
@@ -203,22 +207,23 @@ export const CabinetShell = ({ layout, theme, title, pulse }: CabinetShellProps)
         position={[halfWidth, height / 2, 0]}
         rotationY={Math.PI / 2}
       />
-      {[0.32, 0.4].map((offset, index) => (
-        <mesh
-          key={offset}
-          position={[halfWidth * offset, height * 0.62, halfDepth + 0.01]}
-          rotation-z={-0.55}
-          renderOrder={3}
-        >
-          <planeGeometry args={[0.12 + index * 0.1, height * 0.55]} />
-          <meshBasicMaterial
-            color="#ffffff"
-            transparent
-            opacity={0.12}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
+      {!shattered &&
+        [0.32, 0.4].map((offset, index) => (
+          <mesh
+            key={offset}
+            position={[halfWidth * offset, height * 0.62, halfDepth + 0.01]}
+            rotation-z={-0.55}
+            renderOrder={3}
+          >
+            <planeGeometry args={[0.12 + index * 0.1, height * 0.55]} />
+            <meshBasicMaterial
+              color="#ffffff"
+              transparent
+              opacity={0.12}
+              depthWrite={false}
+            />
+          </mesh>
+        ))}
 
       {/* Corner posts */}
       {[-1, 1].flatMap((sx) =>
